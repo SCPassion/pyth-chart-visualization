@@ -12,13 +12,12 @@ async function fetchPythPrice() {
         const sym = priceFeedId.filter((priceFeed)=>priceFeed.id === priceObj.id)[0].sym
         const publishDate = new Date(priceObj.ema_price.publish_time * 1000)
         const formattedDate = publishDate.toLocaleString()
-        
         return {
             id: priceObj.id,
             name: sym,
             publishTime: formattedDate,
-            emaPrice: priceObj.ema_price,
-            price: Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo
+            price: Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo,
+            confidence: Number(priceObj.ema_price.conf) * 10**priceObj.ema_price.expo
         }
     })
 }
