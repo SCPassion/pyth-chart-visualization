@@ -14,7 +14,7 @@ This project visualizes cryptocurrency prices using Chart.js and data fetched fr
     cd pyth-chart-visualization
     ```
 
-3. Open [index.html](http://_vscodecontentref_/0) in your preferred web browser.
+3. Open [index.html](./index.html) in your preferred web browser.
 
 ## Usage
 
