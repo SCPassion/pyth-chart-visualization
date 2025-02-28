@@ -10,9 +10,13 @@ async function fetchPythPrice() {
 
     return data.parsed.map((priceObj)=> {
         const sym = priceFeedId.filter((priceFeed)=>priceFeed.id === priceObj.id)[0].sym
+        const publishDate = new Date(priceObj.ema_price.publish_time * 1000)
+        const formattedDate = publishDate.toLocaleString()
+        
         return {
             id: priceObj.id,
             name: sym,
+            publishTime: formattedDate,
             emaPrice: priceObj.ema_price,
             price: Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo
         }
@@ -22,13 +26,9 @@ async function fetchPythPrice() {
 const priceFeedFetcher = setInterval(async ()=> {
     console.log(await fetchPythPrice())
 }, 1000)
-// // const pythFetcher = setInterval(fetchPythPrice, 100)
 
 setTimeout(()=> clearInterval(priceFeedFetcher), 10000)
 
-// const a = await fetchPythPrice()
-
-// console.log(a)
 
 // const ctx = document.getElementById('myChart').getContext('2d');
 
