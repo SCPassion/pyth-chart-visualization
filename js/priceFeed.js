@@ -15,3 +15,24 @@ export const priceFeedId = [
         id: '09f7c1d7dfbb7df2b8fe3d3d87ee94a2259d212da4f30c1f0540d066dfa44723'
     }
 ]
+
+export const baseURL = "https://hermes.pyth.network/v2/updates/price/latest?";
+
+export async function fetchPythPrice(fetchUrl) {    
+    const response = await fetch(fetchUrl)
+    const data = await response.json()
+
+    return data.parsed.map((priceObj)=> {
+        const sym = priceFeedId.filter((priceFeed)=>priceFeed.id === priceObj.id)[0].sym
+        const publishDate = new Date(priceObj.ema_price.publish_time * 1000)
+        const formattedDate = publishDate.toLocaleString()
+
+        return {
+            id: priceObj.id,
+            name: sym,
+            publishTime: formattedDate,
+            price: Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo,
+            confidence: Number(priceObj.ema_price.conf) * 10**priceObj.ema_price.expo
+        }
+    })
+}

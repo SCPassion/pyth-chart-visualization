@@ -1,29 +1,10 @@
-import {priceFeedId} from './priceFeed.js'
+import {baseURL, priceFeedId, fetchPythPrice} from './priceFeed.js'
 
-const baseURL = "https://hermes.pyth.network/v2/updates/price/latest?";
 const queries = priceFeedId.map((priceFeed) => `ids[]=${priceFeed.id}`).join('&');
 const url = `${baseURL}${queries}`
 
-async function fetchPythPrice() {    
-    const response = await fetch(url)
-    const data = await response.json()
-
-    return data.parsed.map((priceObj)=> {
-        const sym = priceFeedId.filter((priceFeed)=>priceFeed.id === priceObj.id)[0].sym
-        const publishDate = new Date(priceObj.ema_price.publish_time * 1000)
-        const formattedDate = publishDate.toLocaleString()
-        return {
-            id: priceObj.id,
-            name: sym,
-            publishTime: formattedDate,
-            price: Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo,
-            confidence: Number(priceObj.ema_price.conf) * 10**priceObj.ema_price.expo
-        }
-    })
-}
-
 const priceFeedFetcher = setInterval(async ()=> {
-    console.log(await fetchPythPrice())
+    console.log(await fetchPythPrice(url))
 }, 1000)
 
 setTimeout(()=> clearInterval(priceFeedFetcher), 10000)
