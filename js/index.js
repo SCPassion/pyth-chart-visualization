@@ -1,26 +1,34 @@
 import {priceFeedId} from './priceFeed.js'
 
-async function fetchPythPrice() {
-    const response = await fetch(`https://hermes.pyth.network/v2/updates/price/latest?ids[]=${priceFeedId[0].id}&ids[]=${priceFeedId[1].id}`)
+const baseURL = "https://hermes.pyth.network/v2/updates/price/latest?";
+const queries = priceFeedId.map((priceFeed) => `ids[]=${priceFeed.id}`).join('&');
+const url = `${baseURL}${queries}`
 
-// // const response = await fetch('https://hermes.pyth.network/v2/price_feeds?query=btc&asset_type=crypto')
+async function fetchPythPrice() {    
+    const response = await fetch(url)
     const data = await response.json()
 
     return data.parsed.map((priceObj)=> {
+        const sym = priceFeedId.filter((priceFeed)=>priceFeed.id === priceObj.id)[0].sym
         return {
             id: priceObj.id,
-            emaPrice: priceObj.ema_price
+            name: sym,
+            emaPrice: priceObj.ema_price,
+            price: Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo
         }
     })
 }
 
+const priceFeedFetcher = setInterval(async ()=> {
+    console.log(await fetchPythPrice())
+}, 1000)
 // // const pythFetcher = setInterval(fetchPythPrice, 100)
 
-// // setTimeout(()=> clearInterval(pythFetcher), 10000)
+setTimeout(()=> clearInterval(priceFeedFetcher), 10000)
 
-const a = await fetchPythPrice()
+// const a = await fetchPythPrice()
 
-console.log(a)
+// console.log(a)
 
 // const ctx = document.getElementById('myChart').getContext('2d');
 
