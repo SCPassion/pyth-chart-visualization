@@ -18,6 +18,8 @@ form.addEventListener('submit', (e)=> {
     selectedCrypto = dropDown.value
     myLineChart.data.datasets[0].label = `${selectedCrypto.toUpperCase()}`
     myLineChart.data.datasets[0].data = []
+    myLineChart.data.datasets[1].data = []
+    myLineChart.data.datasets[2].data = []
     myLineChart.data.labels = []
 })
 
@@ -31,11 +33,32 @@ const myLineChart = new Chart(ctx, {
             data: [], // Sample data points
             borderColor: 'rgba(75, 192, 192, 1)', // Line color
             backgroundColor: 'rgba(75, 192, 192, 0.3)', // Fill under the line
-            borderWidth: 2,
-            pointRadius: 5, // Point size
+            borderWidth: 5,
+            pointRadius: 0, // Point size
             pointBackgroundColor: 'rgba(75, 192, 192, 1)', // Point color
-            fill: true // Fill area under the line
-        }]
+            fill: false // Fill area under the line
+        }, 
+        {
+            label: 'upperbound',
+            data: [], // Sample data points
+            borderColor: 'rgba(75, 255, 255, 0.3)', // Line color
+            backgroundColor: 'rgba(75, 255, 255, 0.3)', // Fill under the line
+            borderWidth: 1,
+            pointRadius: 0, // Point size
+            pointBackgroundColor: 'rgba(75, 192, 192, 1)', // Point color
+            fill: '+1' // Fill area under the line
+        }, 
+        {
+            label: 'lowerbound',
+            data: [], // Sample data points
+            borderColor: 'rgba(75, 192, 192, 1)', // Line color
+            backgroundColor: 'rgba(75, 192, 192, 0.3)', // Fill under the line
+            borderWidth: 1,
+            pointRadius: 0, // Point size
+            pointBackgroundColor: 'rgba(75, 192, 192, 1)', // Point color
+            fill: false // Fill area under the line
+        }
+    ]
     },
     options: {
         responsive: true,
@@ -75,16 +98,20 @@ const myLineChart = new Chart(ctx, {
     }
 });
 
-function updateChartValue(publishTime, price) {
+function updateChartValue(publishTime, price, confidence) {
     if(myLineChart.data.labels.length >= 100) {
         myLineChart.data.labels.shift();  // Remove first label
         myLineChart.data.datasets[0].data.shift()
+        myLineChart.data.datasets[1].data.shift()
+        myLineChart.data.datasets[2].data.shift()
     }
-    // myLineChart.data.labels.shift();  // Remove first label
     myLineChart.data.labels.push(`${publishTime}`); // Add new label
-    
-    // myLineChart.data.datasets[0].data.shift()
-    myLineChart.data.datasets[0].data.push(price)
+    myLineChart.data.datasets[0].data.push(Number(price))
+    myLineChart.data.datasets[1].data.push(Number(price) + confidence)
+    myLineChart.data.datasets[2].data.push(Number(price) - confidence)
+
+    myLineChart.options.scales.y.min = Number(price) * 0.995
+    myLineChart.options.scales.y.max = Number(price) * 1.005
     myLineChart.update();
 }
 
@@ -92,11 +119,11 @@ const priceFeedFetcher = setInterval(async ()=> {
     const priceFeeds  = await fetchPythPrice(url)
     if(selectedCrypto) {
         const selectedPriceFeed = priceFeeds.filter((priceFeed)=> priceFeed.name === selectedCrypto)[0]
-        updateChartValue(selectedPriceFeed.publishTime, selectedPriceFeed.price)
+        updateChartValue(selectedPriceFeed.publishTime, selectedPriceFeed.price, selectedPriceFeed.confidence)
 
     } else {
         // default to use BTC priceFeed
-        updateChartValue(priceFeeds[0].publishTime, priceFeeds[0].price)
+        updateChartValue(priceFeeds[0].publishTime, priceFeeds[0].price, priceFeeds[0].confidence)
     }
 }, 500)
 

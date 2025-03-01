@@ -35,7 +35,7 @@ export async function fetchPythPrice(fetchUrl) {
             id: priceObj.id,
             name: sym,
             publishTime: formattedDate,
-            price: (Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo).toFixed(2),
+            price: (Number(priceObj.ema_price.price) * 10**priceObj.ema_price.expo),
             confidence: Number(priceObj.ema_price.conf) * 10**priceObj.ema_price.expo
         }
     })
