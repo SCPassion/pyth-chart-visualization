@@ -30,7 +30,7 @@ const myLineChart = new Chart(ctx, {
     }
 });
 
-function updateValue(publishTime, price) {
+function updateChartValue(publishTime, price) {
     myLineChart.data.labels.shift();  // Remove first label
     myLineChart.data.labels.push(`${publishTime}`); // Add new label
     
@@ -41,8 +41,8 @@ function updateValue(publishTime, price) {
 
 const priceFeedFetcher = setInterval(async ()=> {
     const priceFeeds  = await fetchPythPrice(url)
-    console.log(priceFeeds)
-}, 1000)
+    updateChartValue(priceFeeds[0].publishTime, priceFeeds[0].price)
+}, 2000)
 
 setTimeout(()=> clearInterval(priceFeedFetcher), 10000)
 
