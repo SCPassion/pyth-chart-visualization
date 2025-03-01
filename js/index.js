@@ -26,6 +26,24 @@ const myLineChart = new Chart(ctx, {
         animation: {
             duration: 500, // Smooth transition for X-axis
             easing: 'linear'
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: 'whitesmoke',
+                    font: {
+                        size: 20
+                    } 
+                }
+            },
+            y: {
+                ticks: {
+                    color: 'whitesmoke',
+                    font: {
+                        size: 20
+                    }
+                }
+            }
         }
     }
 });

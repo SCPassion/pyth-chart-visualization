@@ -42,7 +42,7 @@ h1 {
 .form {
     flex-direction: row; 
     gap: 1.5em;
-    background-color: rgba(200, 0, 200, 0.8);
+    background-color: rgba(150, 0, 150, 0.8);
     padding: 1.5em 2em;
     border-radius: 50px;
 }
@@ -60,4 +60,10 @@ select, button {
 /* button */
 button:focus, button:hover {
     transform: scale(1.2);
+}
+
+canvas {
+    background-color: rgba(50, 0, 50, 0.8);
+    border-radius: 50px;
+    padding: 1em;
 }

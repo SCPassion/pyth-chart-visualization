@@ -25,8 +25,12 @@ export async function fetchPythPrice(fetchUrl) {
     return data.parsed.map((priceObj)=> {
         const sym = priceFeedId.filter((priceFeed)=>priceFeed.id === priceObj.id)[0].sym
         const publishDate = new Date(priceObj.ema_price.publish_time * 1000)
-        const formattedDate = publishDate.toLocaleString()
-
+        const formattedDate = publishDate.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit',
+            hour12: false // Set to true for AM/PM format
+        });
         return {
             id: priceObj.id,
             name: sym,
