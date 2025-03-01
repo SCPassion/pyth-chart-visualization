@@ -58,6 +58,16 @@ select, button {
     transition: transform 0.3s;
 }
 
+select {
+    /* I need another color for select */
+    background-image: linear-gradient(30deg, #332324, #1f5593);
+    color: white;
+}
+button {
+    background-image: linear-gradient(30deg, #232324, #6f15a3);
+    color: white;
+}
+
 /* button */
 button:focus, button:hover {
     transform: scale(1.2);
