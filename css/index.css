@@ -53,7 +53,7 @@ select, button {
     font-size: 2rem;
     padding: 0.5em 1em;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
     transition: transform 0.3s;
 }
@@ -61,6 +61,8 @@ select, button {
 /* button */
 button:focus, button:hover {
     transform: scale(1.2);
+    background-color: #232324;
+    color: whitesmoke;
 }
 
 canvas {
