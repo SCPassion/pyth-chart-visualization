@@ -9,10 +9,10 @@ const ctx = document.getElementById('myChart').getContext('2d');
 const myLineChart = new Chart(ctx, {
     type: 'line', // Line chart type
     data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        labels: [],
         datasets: [{
             label: 'Monthly Sales',
-            data: [10, 20, 15, 25, 30, 40], // Sample data points
+            data: [], // Sample data points
             borderColor: 'rgba(75, 192, 192, 1)', // Line color
             backgroundColor: 'rgba(75, 192, 192, 0.3)', // Fill under the line
             borderWidth: 2,
@@ -31,24 +31,21 @@ const myLineChart = new Chart(ctx, {
 });
 
 function updateChartValue(publishTime, price) {
-    myLineChart.data.labels.shift();  // Remove first label
+    if(myLineChart.data.labels.length >= 10) {
+        myLineChart.data.labels.shift();  // Remove first label
+        myLineChart.data.datasets[0].data.shift()
+    }
+    // myLineChart.data.labels.shift();  // Remove first label
     myLineChart.data.labels.push(`${publishTime}`); // Add new label
     
-    myLineChart.data.datasets[0].data.shift()
+    // myLineChart.data.datasets[0].data.shift()
     myLineChart.data.datasets[0].data.push(price)
     myLineChart.update();
 }
 
 const priceFeedFetcher = setInterval(async ()=> {
     const priceFeeds  = await fetchPythPrice(url)
-    updateChartValue(priceFeeds[0].publishTime, priceFeeds[0].price)
-}, 2000)
+    updateChartValue(priceFeeds[1].publishTime, priceFeeds[1].price)
+}, 500)
 
-setTimeout(()=> clearInterval(priceFeedFetcher), 10000)
-
-
-// const updatehandler = setInterval(updateValue, 500)
-
-// setTimeout(()=> {
-//     clearInterval(updatehandler)
-// }, 10000)
+// setTimeout(()=> clearInterval(priceFeedFetcher), 10000)
